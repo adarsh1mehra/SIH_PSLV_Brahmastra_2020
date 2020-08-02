@@ -1,0 +1,1 @@
+<div>A CNN model is implemented and a DenseNet121 and ResNet50 model (pretrained on imagenet) for the classification tasks. The CNN model achieved a test accuracy of 90.62% whereas the DenseNet121 model achieved a test accuracy of 92.2% and the ResNet50 model achieved an accuracy of 95.3% on the test set.</div>

@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.site-title{
+  background-size: cover;
+  outline: none;
+  height: 80vh;
+  justify-content: center;
+}
+.site-title .site-background{
+  text-align: center;
+  color: var(--white);
+  margin-left: -3px;
+}
+.site-background{
+  padding-top: 10rem;
+  text-align: center;
+  color: var(--white);
+  margin-left: -3px;
+}
+.site-title{
+  margin: .3rem;
+}
+.site-title{
+  margin: 3rem;
+  background: var(--sky);
+}
+.site-title{
+  background: transparent;
+  color: var(--white);
+}
+
