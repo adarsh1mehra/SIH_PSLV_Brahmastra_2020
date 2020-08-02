@@ -65,7 +65,7 @@ For getting a good accuracy, we should have the similar type of training and tes
 
 <li> Created Bag of Words and then used nltk to get maximum probability. </li>
 
-<li> Finally it Classifies into a particular class as per the maximum probability. </li>
+<li> Finally it Classifies into a particular class as per the maximum probability. </li></ul>
 
 ### 4. Displaying information based on other features if text isn’t present
 In case the text is not present in an image then we build a powerful Neural network that can classify Natural Scenes around the world.
