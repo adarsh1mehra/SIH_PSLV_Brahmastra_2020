@@ -16,19 +16,26 @@ import numpy as np
 import argparse
 import time
 import cv2
+import string
+import nltk
+nltk.download('stopwords')
+from nltk.corpus import stopwords
+STOPWORDS = set(stopwords.words('english'))
+
 
 # Keras
 import tensorflow as tf
 from tensorflow import keras
 from keras.applications.imagenet_utils import preprocess_input, decode_predictions
-
+#from keras.models import load_model
 from keras.preprocessing import image
 
-
+# Flask utils
 from flask import Flask, redirect, url_for, request, render_template
 from werkzeug.utils import secure_filename
 from gevent.pywsgi import WSGIServer
 
+# Define a flask app
 app = Flask(__name__)
 
 ##############################
@@ -37,6 +44,7 @@ app = Flask(__name__)
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 ###########################
 
+# Model saved with Keras model.save()
 
 MODEL_PATH = 'my_model.h5'
 
@@ -44,11 +52,13 @@ MODEL_PATH = 'my_model.h5'
 
 model = tf.keras.models.load_model(MODEL_PATH)
 
-   
+    #graph = tf.compat.v1.get_default_graph()
+    #graph = tf.get_default_graph()
+#model._make_predict_function()          # Necessary
 
 
 session = tf.compat.v1.keras.backend.get_session()
-
+#graph = tf.get_default_graph()
 graph = tf.compat.v1.get_default_graph()
 # print('Model loaded. Start serving...')
 
@@ -62,7 +72,8 @@ def model_predict(img_path, classifier):
     ima = cv2.resize(ima, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
 
     #retval, threshold = cv2.threshold(image,127,255,cv2.THRESH_BINARY)
-    text = pytesseract.image_to_string(ima)
+    custom_config = r'-l hin+eng --psm 6'
+    text = pytesseract.image_to_string(ima,config = custom_config)
     if(len(text)==0):
         with session.as_default():
             with graph.as_default():
@@ -78,6 +89,9 @@ def model_predict(img_path, classifier):
                 return(pred_class)
     else:
         imge = cv2.imread(img_path)
+        temp=img_path.split('\\')
+        destination=temp[-1]
+        
         orig = imge.copy()
         (H, W) = imge.shape[:2]
         # set the new width and height and then determine the ratio in change
@@ -110,7 +124,11 @@ def model_predict(img_path, classifier):
         (scores, geometry) = net.forward(layerNames)
         end = time.time()
 
-        
+        # show timing information on text prediction
+        print("[INFO] text detection took {:.6f} seconds".format(end - start))
+
+        # grab the number of rows and columns from the scores volume, then
+        # initialize our set of bounding box rectangles and corresponding
         # confidence scores
         (numRows, numCols) = scores.shape[2:4]
         rects = []
@@ -134,15 +152,18 @@ def model_predict(img_path, classifier):
                         if scoresData[x] < 0.5:
                                 continue
 
-                        # compute the offset factor a
+                        # compute the offset factor as our resulting feature maps will
+                        # be 4x smaller than the input image
                         (offsetX, offsetY) = (x * 4.0, y * 4.0)
 
-                        
+                        # extract the rotation angle for the prediction and then
+                        # compute the sin and cosine
                         angle = anglesData[x]
                         cos = np.cos(angle)
                         sin = np.sin(angle)
 
-                        # use the geometry volume to derive the width and height 
+                        # use the geometry volume to derive the width and height of
+                        # the bounding box
                         h = xData0[x] + xData2[x]
                         w = xData1[x] + xData3[x]
 
@@ -158,7 +179,8 @@ def model_predict(img_path, classifier):
                         rects.append((startX, startY, endX, endY))
                         confidences.append(scoresData[x])
 
-        
+        # apply non-maxima suppression to suppress weak, overlapping bounding
+        # boxes
         boxes = non_max_suppression(np.array(rects), probs=confidences)
 
         # loop over the bounding boxes
@@ -175,9 +197,122 @@ def model_predict(img_path, classifier):
 
         # show the output image
         #cv2.imshow("Text Detection", orig)
-        cv2.imwrite("1.jpg",orig)
+        #Deleting image
+        filelist = [ f for f in os.listdir('static/images/')]
+        for f in filelist:
+            os.remove(os.path.join('static/images/', f))
+        cv2.imwrite("static/images/"+destination,orig)
 
-        return text
+
+################################################################
+################################################################
+        #RELAVANCE OF TEXT
+        #########################################################
+        #return text
+        dict_ = {}
+        key_classifier=""
+
+
+        file1 = open("Water Bodies.txt","r+") 
+        Water_Bodies = file1.read().split('\n')
+
+        file2 = open("Mountains.txt","r+") 
+        Mountains = file2.read().split('\n')
+
+        file3 = open("Forest.txt","r+") 
+        Forest = file3.read().split('\n')
+
+        file4 = open("Buildings.txt","r+") 
+        Buildings = file4.read().split('\n')
+
+        file5 = open("Street.txt","r+") 
+        Street = file5.read().split('\n')
+
+        file6 = open("school.txt","r+") 
+        School = file6.read().split('\n')
+        
+        file7 = open("GovtBuilding.txt","r+") 
+        GovtBuilding = file7.read().split('\n')
+
+        file8 = open("Currency.txt","r+") 
+        Currency = file8.read().split('\n')
+
+        file9 = open("Ticket.txt","r+") 
+        Ticket = file9.read().split('\n')
+
+
+        dict_['Water Bodies'] = Water_Bodies
+        dict_['Mountains'] = Mountains
+        dict_['Forest'] = Forest
+        dict_['Buildings'] = Buildings
+        dict_['Street'] = Street
+        dict_['School'] = School
+        dict_['Currency'] = Currency
+        dict_['Government Building'] = GovtBuilding
+        dict_['Ticket'] = Ticket
+
+          
+       
+        
+
+        def text_process(review_msg):
+            nopunc_review_msg = [char for char in review_msg if char not in string.punctuation]
+            nopunc_review_msg = ''.join(nopunc_review_msg)
+            print(nopunc_review_msg.split())
+            
+            x = ([word.lower() for word in nopunc_review_msg.split() if word.lower() not in stopwords.words('english')])
+            return x
+
+        cleanText = text_process(text)
+
+        
+
+        resultDict = {'Water Bodies' : 0,
+                      'Mountains' : 0,
+                      'Forest': 0,
+                      'Buildings' : 0,
+                      'Street' : 0,
+                      'School' : 0,
+                      'Currency' : 0,
+                      'Government Building' : 0,
+                      'Ticket' : 0,
+                      }
+
+        for word in cleanText:
+            if word in dict_.keys():
+                resultDict[word] += 1
+            else:
+                for key in dict_.keys():
+                    if word in dict_[key]:
+                       resultDict[key] += 1
+                    else:
+                        continue
+
+
+        # Getting the Probability  
+
+        for key in resultDict:
+            resultDict[key] = resultDict[key]/len(cleanText)
+            
+        maxProb = max(resultDict.values())
+        if maxProb == 0.0:
+            text=text+'//#***#//'+'undefined'
+            return text    
+        for key, val in resultDict.items():
+            if val == maxProb:
+                print("key",key)
+                key_classifier += key
+                print('abstract'+key_classifier)
+                text=text+'//#***#//'+key_classifier
+                return text 
+        text=text+'//#***#//'+'undefined'
+        return text            
+
+        ########################################################
+        #result=[]
+        #result.append(text)
+        #return result
+
 
 
 
