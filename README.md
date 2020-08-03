@@ -59,13 +59,19 @@ To build and train such a deep learning model, the EAST method utilizes novel, c
   
 For getting a good accuracy, we should have the similar type of training and testing data. So, in the training dataset we provided extracted text from the images.
 
-<li>We created our own dataset which contain texts of the 6 classes we are considering: Streets, Forests, Water Bodies, Mountains, Government Official Buildings and Academic Institutions.</li>
+<li>We created our own dataset which contain texts of the 6 classes we are considering: Streets, Forests, Water Bodies, Mountains, Government Official Buildings and Academic Institutions.Links to the dataset:
+<ol> <li>Forest- https://drive.google.com/drive/folders/1RserJyF45Rwkslof53rf33JFgtWu8mmx?usp=sharing</li>
+  <li> Academic Istitutions-  https://drive.google.com/drive/folders/1MhAuHXiVH4ruP2gEvHd3agoJH12f6OZc?usp=sharing</li>
+  <li> Water Bodies - https://drive.google.com/drive/folders/1pH9THqe-5AYbcP-hNEhTK9xmFF-Con2u?usp=sharing</li>
+  <li> Government Offices - https://drive.google.com/drive/folders/1JJHCLtvknXn7dG00LLO1V-OZG7XAY-rV?usp=sharing</li>
+  <li> Streets -  https://drive.google.com/drive/folders/10eqimKMSbFljWSHn0o4ByrapL3tM9kx_?usp=sharing</li>
+  <li>Mountains - https://drive.google.com/drive/folders/1FyvrS1ACeWa5pmVgzwmyJSXRjNhhEO87?usp=sharing</li> </ol>
 
-<li> We applied OCR - Extraction of texts, and saved the result in csv file.</li>
-
+<li> We applied OCR - Extraction of texts, and saved the result in csv file. - https://github.com/adarsh1mehra/SIH_PSLV_Brahmastra_2020/tree/master/Datasets</li>
 <li> Created Bag of Words and then used nltk to get maximum probability. </li>
 
 <li> Finally it Classifies into a particular class as per the maximum probability. </li></ul>
+
 
 ### 4. Displaying information based on other features if text isn’t present
 In case the text is not present in an image then we build a powerful Neural network that can classify Natural Scenes around the world.
