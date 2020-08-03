@@ -1,5 +1,5 @@
+#coding utf-8
 from __future__ import division, print_function
-# coding=utf-8
 import sys
 import os
 import glob
@@ -23,7 +23,7 @@ from nltk.corpus import stopwords
 STOPWORDS = set(stopwords.words('english'))
 
 
-# Keras
+# Keras and Tensorflow
 import tensorflow as tf
 from tensorflow import keras
 from keras.applications.imagenet_utils import preprocess_input, decode_predictions
@@ -35,11 +35,11 @@ from flask import Flask, redirect, url_for, request, render_template
 from werkzeug.utils import secure_filename
 from gevent.pywsgi import WSGIServer
 
-# Define a flask app
+# Defining a flask app
 app = Flask(__name__)
 
 ##############################
-#pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)#\\Tesseract-OCR\\tesseract.exe'
+
 
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
 ###########################
