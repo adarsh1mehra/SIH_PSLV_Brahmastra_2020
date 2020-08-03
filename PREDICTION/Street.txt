@@ -1,0 +1,31 @@
+road
+thoroughfare
+way
+avenue
+drive
+row
+crescent
+terrace
+close
+parade
+side street
+side road
+lane
+alley
+boulevard
+highway
+thoroughfare
+roadway
+road surface
+pavement
+km
+kilometer
+marg
+path
+highway
+new
+delhi
+b'lore
+bombay
+magalore
+
