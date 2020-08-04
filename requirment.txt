@@ -1,0 +1,16 @@
+pytesseract
+imutils
+numpy
+pandas
+Flask
+os3
+PIL
+tensorflow
+keras
+glob
+re
+cv
+argparse
+Werkzeug
+gevent
+nltk
